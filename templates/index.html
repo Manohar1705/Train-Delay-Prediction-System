@@ -111,7 +111,8 @@
 
             <div>
                 <label class="text-sm">Train Type</label>
-                <select id="trainType" class="w-full mt-2 p-3 rounded-lg border">
+                <select id="trainType" class="w-full mt-2 p-3 rounded-lg border" required>
+                    <option value="">Select Train Type</option>
                     {% for t in types %}
                     <option value="{{ t }}">{{ t }}</option>
                     {% endfor %}
@@ -277,4 +278,5 @@ This project demonstrates the application of predictive analytics, machine learn
 </script>
 
 </body>
+
 </html>
