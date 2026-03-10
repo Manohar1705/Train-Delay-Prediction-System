@@ -1,282 +1,266 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Train Delay Risk Prediction System</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Train Delay Risk Prediction System</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#111827,#1f2937)}
+.card{background:#1f2937;border:1px solid #374151;transition:transform .3s ease,box-shadow .3s ease}
+.card:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(0,0,0,.3)}
+select{background:#ffffff;color:#111827!important}
+select option{background:#ffffff;color:#111827}
+.spinner{border:3px solid rgba(255,255,255,.3);border-top:3px solid white;border-radius:50%;width:18px;height:18px;animation:spin 1s linear infinite}
+.fade-in{animation:fadeIn .6s ease-in-out}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+details summary{list-style:none}
+.arrow{transition:transform .3s ease;font-size:22px}
+details[open] .arrow{transform:rotate(180deg)}
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
-
-    <style>
-        html { scroll-behavior: smooth; }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #111827, #1f2937);
-        }
-
-        .card {
-            background: #1f2937;
-            border: 1px solid #374151;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-        }
-
-        select {
-            background: #ffffff;
-            color: #111827 !important;
-        }
-
-        select option {
-            background: #ffffff;
-            color: #111827;
-        }
-
-        .spinner {
-            border: 3px solid rgba(255,255,255,0.3);
-            border-top: 3px solid white;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            animation: spin 1s linear infinite;
-        }
-
-        .fade-in {
-            animation: fadeIn 0.6s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+</style>
 </head>
-
 <body class="min-h-screen text-gray-200">
 
-<!-- NAVBAR -->
 <nav class="bg-gray-900 border-b border-gray-700 sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-        <h1 class="text-lg font-semibold">🚆 Train Delay Risk System</h1>
-        <div class="space-x-6 text-sm">
-            <a href="#prediction" class="hover:text-white transition">Predict</a>
-            <a href="#analytics" class="hover:text-white transition">Analytics</a>
-            <a href="#about" class="hover:text-white transition">About</a>
-        </div>
-    </div>
+<div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+<h1 class="text-lg font-semibold flex items-center gap-2"><span class="text-2xl leading-none">🚆</span> <span>Train Delay Risk Prediction System</span></h1>
+<div class="space-x-6 text-sm">
+<a href="#prediction" class="hover:text-white transition">Predict</a>
+<a href="#analytics" class="hover:text-white transition">Analytics</a>
+<a href="#faq" class="hover:text-white transition">FAQ</a>
+</div>
+</div>
 </nav>
 
-<!-- PREDICTION SECTION -->
 <section id="prediction" class="max-w-6xl mx-auto p-6 mt-8">
-    <div class="card rounded-2xl p-8 shadow-lg">
+<div class="card rounded-2xl p-8 shadow-lg">
+<h2 class="text-3xl font-bold text-center mb-8">Train Delay Risk Predictor</h2>
+<form id="predictionForm" class="grid md:grid-cols-2 gap-6">
 
-        <h2 class="text-3xl font-bold text-center mb-8">Train Delay Risk Prediction</h2>
+<div>
+<label class="text-sm">Origin Station</label>
+<select id="origin" class="w-full mt-2 p-3 rounded-lg border" required>
+<option value="">Select Origin</option>
+{% for station in stations %}
+<option value="{{ station }}">{{ station }}</option>
+{% endfor %}
+</select>
+</div>
 
-        <form id="predictionForm" class="grid md:grid-cols-2 gap-6">
+<div>
+<label class="text-sm">Destination</label>
+<select id="destination" class="w-full mt-2 p-3 rounded-lg border" required>
+<option value="">Select Destination</option>
+{% for station in stations %}
+<option value="{{ station }}">{{ station }}</option>
+{% endfor %}
+</select>
+</div>
 
-            <div>
-                <label class="text-sm">Origin Station</label>
-                <select id="origin" class="w-full mt-2 p-3 rounded-lg border" required>
-                    <option value="">Select Origin</option>
-                    {% for station in stations %}
-                    <option value="{{ station }}">{{ station }}</option>
-                    {% endfor %}
-                </select>
-            </div>
+<div>
+<label class="text-sm">Journey Date</label>
+<input type="date" id="journeyDate" class="w-full mt-2 p-3 rounded-lg border text-gray-900" required>
+</div>
 
-            <div>
-                <label class="text-sm">Destination</label>
-                <select id="destination" class="w-full mt-2 p-3 rounded-lg border" required>
-                    <option value="">Select Destination</option>
-                    {% for station in stations %}
-                    <option value="{{ station }}">{{ station }}</option>
-                    {% endfor %}
-                </select>
-            </div>
+<div>
+<label class="text-sm">Train Type</label>
+<select id="trainType" class="w-full mt-2 p-3 rounded-lg border" required>
+<option value="">Select Train Type</option>
+{% for t in types %}
+<option value="{{ t }}">{{ t }}</option>
+{% endfor %}
+</select>
+</div>
 
-            <div>
-                <label class="text-sm">Journey Date</label>
-                <input type="date" id="journeyDate" class="w-full mt-2 p-3 rounded-lg border text-gray-900" required>
-            </div>
+<div class="md:col-span-2">
+<button type="button" id="predictBtn" class="w-full bg-blue-600 hover:bg-blue-700 transition-all duration-300 p-4 rounded-xl font-semibold flex justify-center items-center gap-3 hover:scale-[1.02]">
+<span id="btnText">Predict Delay Risk</span>
+<div id="loader" class="spinner hidden"></div>
+</button>
+</div>
+</form>
 
-            <div>
-                <label class="text-sm">Train Type</label>
-                <select id="trainType" class="w-full mt-2 p-3 rounded-lg border" required>
-                    <option value="">Select Train Type</option>
-                    {% for t in types %}
-                    <option value="{{ t }}">{{ t }}</option>
-                    {% endfor %}
-                </select>
-            </div>
+<div id="result-area" class="hidden mt-10 text-center">
+<p class="text-sm text-gray-400">Predicted Delay Risk</p>
+<h2 id="riskPercent" class="text-4xl font-bold mt-3"></h2>
+<div class="mt-6">
+<div class="w-full bg-gray-700 rounded-full h-4">
+<div id="riskBar" class="h-4 rounded-full transition-all duration-700" style="width:0%"></div>
+</div>
+</div>
+<p id="riskLabel" class="mt-4 text-lg font-semibold"></p>
+<p id="journeyMessage" class="mt-2 text-sm text-gray-300"></p>
+</div>
 
-            <div class="md:col-span-2">
-                <button type="button" id="predictBtn" class="w-full bg-blue-600 hover:bg-blue-700 transition-all duration-300 p-4 rounded-xl font-semibold flex justify-center items-center gap-3 hover:scale-[1.02]">
-                    <span id="btnText">Analyze Delay Risk</span>
-                    <div id="loader" class="spinner hidden"></div>
-                </button>
-            </div>
-        </form>
+<div class="mt-8 bg-yellow-600/10 border border-yellow-500/30 p-4 rounded-lg text-sm text-yellow-300">
+<strong>Disclaimer:</strong> Prediction is based on historical railway patterns. Unexpected issues may affect actual timings; check official IRCTC sources for live updates.
+</div>
 
-        <!-- RESULT -->
-        <div id="result-area" class="hidden mt-10 text-center">
-            <p class="text-sm text-gray-400">Estimated Delay Risk</p>
-            <h2 id="riskPercent" class="text-4xl font-bold mt-3"></h2>
-
-            <div class="mt-6">
-                <div class="w-full bg-gray-700 rounded-full h-4">
-                    <div id="riskBar" class="h-4 rounded-full transition-all duration-700" style="width:0%"></div>
-                </div>
-            </div>
-
-            <p id="riskLabel" class="mt-4 text-lg font-semibold"></p>
-        </div>
-
-        <!-- DISCLAIMER -->
-        <div class="mt-8 bg-yellow-600/10 border border-yellow-500/30 p-4 rounded-lg text-sm text-yellow-300">
-            <strong>Disclaimer:</strong> This system provides predictions based on historical dataset patterns and does not use real-time railway data.
-        </div>
-
-    </div>
+</div>
 </section>
 
-<!-- ANALYTICS SECTION -->
 <section id="analytics" class="max-w-6xl mx-auto p-6 mt-20">
-    <h2 class="text-3xl font-bold text-center mb-10">Model Analytics</h2>
-
-    <div class="grid md:grid-cols-2 gap-10">
-        <div class="card p-6 rounded-2xl">
-            <h3 class="mb-4 font-semibold">Model Accuracy</h3>
-            <img src="{{ url_for('static', filename='accuracy_comparison.png') }}" class="w-full max-h-64 object-contain">
-        </div>
-
-        <div class="card p-6 rounded-2xl">
-            <h3 class="mb-4 font-semibold">Feature Importance</h3>
-            <img src="{{ url_for('static', filename='feature_importance.png') }}" class="w-full max-h-64 object-contain">
-        </div>
-
-        <div class="card p-6 rounded-2xl">
-            <h3 class="mb-4 font-semibold">Dataset Class Distribution</h3>
-            <img src="{{ url_for('static', filename='delay_distribution.png') }}" class="w-full max-h-64 object-contain">
-        </div>
-
-        <div class="card p-6 rounded-2xl">
-            <h3 class="mb-4 font-semibold">Confusion Matrix</h3>
-            <img src="{{ url_for('static', filename='confusion_matrix.png') }}" class="w-full max-h-64 object-contain">
-        </div>
-    </div>
+<h2 class="text-3xl font-bold text-center mb-10">Model Analytics</h2>
+<div class="grid md:grid-cols-2 gap-10">
+<div class="card p-6 rounded-2xl">
+<h3 class="mb-4 font-semibold">Model Accuracy</h3>
+<img src="{{ url_for('static', filename='accuracy_comparison.png') }}" class="w-full max-h-64 object-contain">
+</div>
+<div class="card p-6 rounded-2xl">
+<h3 class="mb-4 font-semibold">Feature Importance</h3>
+<img src="{{ url_for('static', filename='feature_importance.png') }}" class="w-full max-h-64 object-contain">
+</div>
+<div class="card p-6 rounded-2xl">
+<h3 class="mb-4 font-semibold">Dataset Class Distribution</h3>
+<img src="{{ url_for('static', filename='delay_distribution.png') }}" class="w-full max-h-64 object-contain">
+</div>
+<div class="card p-6 rounded-2xl">
+<h3 class="mb-4 font-semibold">Confusion Matrix</h3>
+<img src="{{ url_for('static', filename='confusion_matrix.png') }}" class="w-full max-h-64 object-contain">
+</div>
+</div>
 </section>
 
-<!-- ABOUT SECTION -->
-<section id="about" class="max-w-6xl mx-auto p-6 mt-20 mb-20">
-    <div class="card p-8 rounded-2xl">
-        <h2 class="text-3xl font-bold mb-6">About The Project</h2>
-        <!-- <p class="text-gray-300 leading-relaxed">
-            RailDelayPredict is a machine learning-based web application developed to estimate the probability of train delays using historical railway operational data.
-The system analyzes route combinations, temporal patterns (such as month and weekday), and train category information to identify delay trends learned from past data.
-Instead of providing a simple on-time or delayed result, the model generates a delay risk percentage, offering a more realistic and data-driven representation of operational uncertainty.
-This project demonstrates the application of predictive analytics, machine learning integration, and full-stack deployment in a transportation domain.
-        </p>
-        <p class="text-gray-300 leading-relaxed mt-4">
-            Instead of a simple delayed/on-time result, the system provides a risk percentage to better reflect uncertainty in operations.
-        </p> -->
-        <p class="text-gray-300 leading-relaxed">
-    Train Delay Prediction System is an intelligent machine learning-powered web application designed to predict the probability of train delays using historical railway operational data. 
-    The system leverages a trained model to analyze route combinations, seasonal patterns (month), weekday trends, and train category information to uncover hidden delay patterns.
-</p>
+<section id="faq" class="max-w-5xl mx-auto p-6 mt-20 mb-20">
+<div class="card p-8 rounded-2xl">
+<h2 class="text-3xl font-bold mb-8 text-center">Frequently Asked Questions</h2>
 
-<p class="text-gray-300 leading-relaxed mt-4">
-    Rather than presenting a basic on-time or delayed output, the platform delivers a delay risk percentage, providing a more realistic and data-driven representation of operational uncertainty.
-</p>
+<div class="space-y-4">
 
-<p class="text-gray-300 leading-relaxed mt-4">
-    This project highlights the integration of predictive analytics, machine learning model deployment, and full-stack web development within a real-world transportation use case.
-</p>
-    </div>
+<details class="border border-gray-600 rounded-lg">
+<summary class="flex justify-between items-center p-4 cursor-pointer font-semibold hover:bg-gray-800">
+<span>How does the Train Delay Risk Prediction system work?</span>
+<span class="arrow">▾</span>
+</summary>
+<div class="px-4 pb-4 text-gray-300">
+Select the origin station, destination station, journey date, and train type. Click "Predict Delay Risk" and the system analyzes historical railway patterns to estimate the delay probability.
+</div>
+</details>
+
+<details class="border border-gray-600 rounded-lg">
+<summary class="flex justify-between items-center p-4 cursor-pointer font-semibold hover:bg-gray-800">
+<span>What does the Delay Risk Percentage indicate?</span>
+<span class="arrow">▾</span>
+</summary>
+<div class="px-4 pb-4 text-gray-300">
+It represents the likelihood that the selected train may be delayed.
+<span class="inline-block w-3 h-3 bg-green-500 rounded-full"></span> Low risk,
+<span class="inline-block w-3 h-3 bg-yellow-400 rounded-full"></span> Moderate risk,
+<span class="inline-block w-3 h-3 bg-red-500 rounded-full"></span> High risk based on historical delay patterns.
+</div>
+</details>
+
+<details class="border border-gray-600 rounded-lg">
+<summary class="flex justify-between items-center p-4 cursor-pointer font-semibold hover:bg-gray-800">
+<span>Which machine learning model is used?</span>
+<span class="arrow">▾</span>
+</summary>
+<div class="px-4 pb-4 text-gray-300">
+Both Decision Tree and Random Forest models were tested. Random Forest produced more stable and accurate results, so it is used for the final delay risk prediction.
+</div>
+</details>
+
+<details class="border border-gray-600 rounded-lg">
+<summary class="flex justify-between items-center p-4 cursor-pointer font-semibold hover:bg-gray-800">
+<span>How accurate are these predictions?</span>
+<span class="arrow">▾</span>
+</summary>
+<div class="px-4 pb-4 text-gray-300">
+The model learns delay patterns from historical railway operations and predicts future delay probability. Reliability depends on how similar future conditions are to past patterns.
+</div>
+</details>
+
+<details class="border border-gray-600 rounded-lg">
+<summary class="flex justify-between items-center p-4 cursor-pointer font-semibold hover:bg-gray-800">
+<span>Which factors and data influence the delay prediction?</span>
+<span class="arrow">▾</span>
+</summary>
+<div class="px-4 pb-4 text-gray-300">
+Weather conditions and seasonal patterns are key influences. The system also analyzes route combinations, weekday trends, train type, and operational railway data to identify delay patterns.
+</div>
+</details>
+
+</div>
+</div>
 </section>
-
-<!-- <footer class="text-center text-gray-500 text-sm pb-6">
-    Built using Random Forest & Historical Dataset Analysis
-</footer> -->
 
 <script>
-    const dateInput = document.getElementById('journeyDate');
-    const today = new Date().toISOString().split('T')[0];
-    dateInput.min = today;
-    dateInput.value = today;
+const dateInput=document.getElementById('journeyDate');
+const today=new Date().toISOString().split('T')[0];
+dateInput.min=today;dateInput.value=today;
 
-    const predictBtn = document.getElementById('predictBtn');
-    const resultArea = document.getElementById('result-area');
-    const riskPercent = document.getElementById('riskPercent');
-    const riskBar = document.getElementById('riskBar');
-    const riskLabel = document.getElementById('riskLabel');
-    const loader = document.getElementById('loader');
-    const btnText = document.getElementById('btnText');
+const predictBtn=document.getElementById('predictBtn');
+const resultArea=document.getElementById('result-area');
+const riskPercent=document.getElementById('riskPercent');
+const riskBar=document.getElementById('riskBar');
+const riskLabel=document.getElementById('riskLabel');
+const journeyMessage=document.getElementById('journeyMessage');
+const loader=document.getElementById('loader');
+const btnText=document.getElementById('btnText');
 
-    predictBtn.addEventListener('click', async () => {
+predictBtn.addEventListener('click',async()=>{
+const origin=document.getElementById('origin').value;
+const destination=document.getElementById('destination').value;
+const trainType=document.getElementById('trainType').value;
 
-        const origin = document.getElementById('origin').value;
-        const destination = document.getElementById('destination').value;
+// validate required fields
+if(!origin || !destination || !dateInput.value || !trainType){
+alert("Please select Origin, Destination, Journey Date, and Train Type.");
+return;
+}
 
-        if (origin === destination) {
-            alert("Origin and Destination cannot be the same.");
-            return;
-        }
+// prevent same station
+if(origin===destination){alert("Origin and Destination cannot be the same.");return}
 
-        loader.classList.remove('hidden');
-        btnText.innerText = "Analyzing...";
+loader.classList.remove('hidden');
+btnText.innerText="Predicting...";
+predictBtn.disabled=true;
 
-        const payload = {
-            origin: origin,
-            destination: destination,
-            date: dateInput.value,
-            type: document.getElementById('trainType').value
-        };
+const payload={origin:origin,destination:destination,date:dateInput.value,type:trainType};
 
-        const response = await fetch('/predict', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
+try{
+const response=await fetch('/predict',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
 
-        const data = await response.json();
+if(!response.ok){
+throw new Error("Prediction service unavailable");
+}
 
-        loader.classList.add('hidden');
-        btnText.innerText = "Analyze Delay Risk";
+const data=await response.json();
 
-        if (data.probability !== undefined) {
-            resultArea.classList.remove('hidden');
-            resultArea.classList.add('fade-in');
+loader.classList.add('hidden');
+btnText.innerText="Predict Delay Risk";
+predictBtn.disabled=false;
 
-            const prob = parseFloat(data.probability);
-            riskPercent.innerText = prob.toFixed(2) + "%";
-            riskBar.style.width = prob + "%";
+if(data.probability!==undefined){
+resultArea.classList.remove('hidden');
+resultArea.classList.add('fade-in');
+const prob=parseFloat(data.probability);
+riskPercent.innerText=prob.toFixed(2)+"%";
+riskBar.style.width=prob+"%";
 
-            if (prob > 60) {
-                riskBar.className = "h-4 rounded-full bg-red-500 transition-all duration-700";
-                riskLabel.innerText = "High Delay Risk";
-            } else if (prob > 30) {
-                riskBar.className = "h-4 rounded-full bg-yellow-400 transition-all duration-700";
-                riskLabel.innerText = "Moderate Delay Risk";
-            } else {
-                riskBar.className = "h-4 rounded-full bg-green-500 transition-all duration-700";
-                riskLabel.innerText = "Low Delay Risk";
-            }
+if(prob>60){riskBar.className="h-4 rounded-full bg-red-500 transition-all duration-700";riskLabel.innerText="High Delay Risk";journeyMessage.innerText="Higher chance of delay. Consider planning extra time before departure. Wishing you a safe journey."}
+else if(prob>30){riskBar.className="h-4 rounded-full bg-yellow-400 transition-all duration-700";riskLabel.innerText="Moderate Delay Risk";journeyMessage.innerText="Some delay conditions may occur. Arriving a little early at the station may help ensure a smooth trip."}
+else{riskBar.className="h-4 rounded-full bg-green-500 transition-all duration-700";riskLabel.innerText="Low Delay Risk";journeyMessage.innerText="Delay chances are low. Have a comfortable and pleasant journey."}
 
-            window.location.hash = "#prediction";
-        }
-    });
+window.location.hash="#prediction";
+}
+}
+catch(err){
+loader.classList.add('hidden');
+btnText.innerText="Predict Delay Risk";
+predictBtn.disabled=false;
+alert("Prediction service unavailable. Please try again.");
+}
+});
 </script>
 
-</body>
+<footer class="text-center text-gray-400 text-sm py-6">
+Train Delay Risk Prediction System • Built with Machine Learning
+</footer>
 
+</body>
 </html>
