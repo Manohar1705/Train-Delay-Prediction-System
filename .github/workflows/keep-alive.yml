@@ -10,4 +10,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Ping Train Delay Prediction service
-        run: curl -fsS https://train-delay-prediction-system.onrender.com/api/health
+        run: curl -fsS https://train-delay-prediction-system.onrender.com/health
